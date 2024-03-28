@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lieferdienst</title>
+    <link rel="icon" type="image/x-icon" href="/img/lieferservice.png"> <!-- Favicon -->
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="fonts.css">
+    <script src="script.js"></script>
+</head>
+
+<body onload="render()">
+    <div class="headline">
+        <img class="logo-head" src="./img/lieferando.png">
+        <img class="burgermenu" src="./img/menu.png">
+    </div>
+    <div class="layout">
+        <!-- Linke Seite-->
+        <div class="left-column">
+            <div class="shop-img">
+                <img src="./img/Pizza.jpeg">
+            </div>
+            <div class="shop-description">
+                <div class="shop-info">
+                    <h2>Pizzeria Buena</h2>
+                    <div class="info-image">
+                        <div class="background">
+                            <img  src="./img/info.png">
+                        </div>
+                        <div class="background">
+                            <img src="./img/herz.jpeg">
+                        </div>
+                    </div>
+                </div>
+                <div class="evaluation">
+                    <label><span>&#9733</span></label> <!-- Dezimalcode Stern-->
+                    <label><span>&#9733</span></label>
+                    <label><span>&#9733</span></label>
+                    <label><span>&#9733</span></label>
+                    <label><span>&#9733</span></label>
+                    <a href="#">0 Bewertungen</a>
+                </div>
+                <div class="shop-infos">
+                    <p>Lieferzeit 30-45 min</p>
+                    <p>KOSTENLOS</p>
+                    <p>Min. 30 CHF</p>
+                </div>
+            </div>
+             <!-- Render Linke Seite-->
+            <div class="content" id="content"></div>
+        </div>
+        <!-- Rechte Seite-->
+        <div class="right-column bottom-row-basket" id="closeBasket">
+            <button class="close-btn" onclick="closeBasket()">X</button>
+            <div class="basket" id="basket">
+                <h2>Warenkorb</h2>
+                <div class="show-basket" id="showBasket">
+                <img class="shopping-img" src="./img/einkaufstasche.png">
+                <h2>Fülle deinen Warenkorb</h2>
+                <p>Füge einige leckere Gerichte aus der</p>
+                <p>Speisekarte hinzu und bestelle dein Essen.</p>
+                </div>
+            </div>
+    </div>
+    <button class="open-Basket-Btn" id="openBasketBtn" onclick="openBasket()">Warenkorb</button>
+</body>
+</html>
