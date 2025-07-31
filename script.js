@@ -1,4 +1,4 @@
-let food = [ // Jason Array // 
+let food = [
     {
       'name': "Pizza Margharita",
       'description': "Tomatensauce, Mozzarella, Oregano",
@@ -41,59 +41,65 @@ let food = [ // Jason Array //
     },
   ];
 
-  let basket = []; // Warenkorb Array
+let basket = [];
 
-  load(); // Local Storage //
+load();
 
-  // FUNKTION 1 Render//
-
-function render() { // Render Pizzas //
-  const content = document.getElementById("content"); // Zugriff auf Id content
-  content.innerHTML = ""; // Div leeren
+/**
+ * Rendert die Liste der verfügbaren Gerichte und den Warenkorb.
+ */
+function render() {
+  const content = document.getElementById("content");
+  content.innerHTML = "";
   content.innerHTML += `<h2 class="popular">Beliebt</h2>`;
-  for (let i = 0; i < food.length; i++) { // Durchlaufen von Jasson Array und Funktion 
+  for (let i = 0; i < food.length; i++) {
     content.innerHTML += generateFoodList(i);
   }
-  renderBasket(); // Warenkorb wird aktiviert
+  renderBasket();
 }
 
-// FUNKTION 4 Wareknkorb berechnung //
+/**
+ * Zeigt den aktuellen Warenkorb an und berechnet die Gesamtsumme.
+ */
+function renderBasket() {
+  let sum = 0;
+  const showBasket = document.getElementById("showBasket");
+  showBasket.innerHTML = "";
 
-function renderBasket() { // Aktiviert addArticle () //
-  let sum = 0;  // Sum = 0 //
-  const showBasket = document.getElementById("showBasket"); // Zugriff aus Id showBasket
-  showBasket.innerHTML = ""; // Div wird geleert
-
-  if (basket.length === 0) { // Fall der Warenkorb leer ist //
-    showBasket.innerHTML += generateBasketTemplate(); // Wird Funktion generateBasket ausgelösst
-  } else { // Falls der Warenkorb nicht leer ist // 
-    const uniqueItems = getUniqueItems(); // Basket inhalt 
-    for (let i = 0; i < uniqueItems.length; i++) { // Array UniqueIntems wird durchlaufen
-      showBasket.innerHTML += generateBasketItem(uniqueItems[i]); //
-      sum += uniqueItems[i].quantity * uniqueItems[i].price; // Summe = Waren anzahl * Warenpreis
+  if (basket.length === 0) {
+    showBasket.innerHTML += generateBasketTemplate();
+  } else {
+    const uniqueItems = getUniqueItems();
+    for (let i = 0; i < uniqueItems.length; i++) {
+      showBasket.innerHTML += generateBasketItem(uniqueItems[i]);
+      sum += uniqueItems[i].quantity * uniqueItems[i].price;
     }
-    showBasket.innerHTML += `<button class="pay">Bezahlen: ${sum.toFixed(2)} CHF</button>`; // Gesammt Zahl
+    showBasket.innerHTML += `<button class="pay">Bezahlen: ${sum.toFixed(2)} CHF</button>`;
   }
 }
 
-// FUNKTION 5 Warenkorb leer ansicht //
-
-function generateBasketTemplate() { // Ausgelösst durch render Basekt
+/**
+ * Gibt das Template für einen leeren Warenkorb zurück.
+ * @returns {string} HTML-Template
+ */
+function generateBasketTemplate() {
   return `
     <div class="show-basket">
       <img class="shopping-img" src="./img/einkauf.png">
       <h2>Fülle deinen Warenkorb</h2>
       <p>Füge ein Gerichte hinzu</p>
       <p>Min 30.-</p>
-      
     </div>
   `;
 }
 
-// FUNKTION 2 Pizza //
-
-function generateFoodList(i) { // ausgelösst durch render() //
-  let currentFood = food[i]; // Jason Array
+/**
+ * Gibt das HTML für ein einzelnes Gericht in der Liste zurück.
+ * @param {number} i - Index des Gerichts im food-Array
+ * @returns {string} HTML-Template
+ */
+function generateFoodList(i) {
+  let currentFood = food[i];
   return `
     <div class="show-food">
       <div class="food-line">
@@ -112,26 +118,31 @@ function generateFoodList(i) { // ausgelösst durch render() //
   `;
 }
 
-// FUNKTION 3 Artikel Hinzufügen //
+/**
+ * Fügt ein Gericht dem Warenkorb hinzu oder erhöht die Menge, falls es bereits vorhanden ist.
+ * @param {number} index - Index des Gerichts im food-Array
+ */
+function addArticle(index) {
+  let selectedFood = food[index];
+  let existingItemIndex = basket.findIndex(item => item.name === selectedFood.name);
 
-function addArticle(index) { // Ausgelösst durch onclick + Button
-  let selectedFood = food[index]; // Array Food
-  let existingItemIndex = basket.findIndex(item => item.name === selectedFood.name); // Basket
-
-  if (existingItemIndex !== -1) { // Falls intem unter 0 ++
+  if (existingItemIndex !== -1) {
     basket[existingItemIndex].quantity++;
-  } else { // Sonst
+  } else {
     selectedFood.quantity = 1;
-    basket.push(selectedFood); // Food wird in Basket gepusht
+    basket.push(selectedFood);
   }
-  renderBasket(); // Warenkorb wird aufgerufen
-  render(); 
-  save(); // Local Storage wird gespeichert
+  renderBasket();
+  render();
+  save();
 }
 
-// FUNKTION 7 Warenkorb //
-
-function generateBasketItem(item) { // Zeigt Warenkorb
+/**
+ * Gibt das HTML für einen Warenkorb-Artikel zurück, inklusive Buttons zum Hinzufügen und Entfernen.
+ * @param {object} item - Artikelobjekt mit name, price und quantity
+ * @returns {string} HTML-Template
+ */
+function generateBasketItem(item) {
   return `
     <div class="basket-item">
       <span class="quantity">${item.quantity}</span>
@@ -147,15 +158,16 @@ function generateBasketItem(item) { // Zeigt Warenkorb
     <div class="bottom-seperator"></div>
   `;
 }
-// Waren hinzufügen oder löschen //
 
-// FUNKTION 8 löschen //
-
-function removeItem(name) { // Ausgelösst durch onclick Button
-  let existingItemIndex = basket.findIndex(item => item.name === name); // Arrow Funktion Basket index
-  if (existingItemIndex !== -1) { // Fall der wert unter 0 
-    if (basket[existingItemIndex].quantity > 1) { // Falls der Wert über 1
-      basket[existingItemIndex].quantity--; // minus 1
+/**
+ * Verringert die Menge eines Artikels im Warenkorb oder entfernt ihn, wenn die Menge 1 ist.
+ * @param {string} name - Name des Artikels
+ */
+function removeItem(name) {
+  let existingItemIndex = basket.findIndex(item => item.name === name);
+  if (existingItemIndex !== -1) {
+    if (basket[existingItemIndex].quantity > 1) {
+      basket[existingItemIndex].quantity--;
     } else {
       basket.splice(existingItemIndex, 1);
     }
@@ -164,40 +176,48 @@ function removeItem(name) { // Ausgelösst durch onclick Button
   save();
 }
 
-// FUNKTIon 9 Hinzufügen //
-
-function addArticleBasket(name) { // Ausgelösst durch onclick Button
-  let existingItemIndex = basket.findIndex(item => item.name === name); // Arrow Funktion Basket index
-  if (existingItemIndex !== -1) { // Fall der wert unter 0 
-    basket[existingItemIndex].quantity++; // plus 1
+/**
+ * Erhöht die Menge eines Artikels im Warenkorb.
+ * @param {string} name - Name des Artikels
+ */
+function addArticleBasket(name) {
+  let existingItemIndex = basket.findIndex(item => item.name === name);
+  if (existingItemIndex !== -1) {
+    basket[existingItemIndex].quantity++;
   }
   renderBasket();
   save();
 }
 
-// FUNKTION 6 Waren nehmen //
-function getUniqueItems() { // Ausgelösst durch render Basket
-  let uniqueItems = []; // Array Items
-  for (let i = 0; i < basket.length; i++) { // Array Basekt wird durchlaufen
-    let existingItemIndex = uniqueItems.findIndex(item => item.name === basket[i].name); // Basekt wird durchsucht und existingIntems  zugewiesen
-    if (existingItemIndex !== -1) { // Fall unter 0
-      uniqueItems[existingItemIndex].quantity += basket[i].quantity; // gleiche anzahl
+/**
+ * Gibt eine Liste der eindeutigen Artikel im Warenkorb mit korrekter Mengenangabe zurück.
+ * @returns {Array} Array von Artikelobjekten
+ */
+function getUniqueItems() {
+  let uniqueItems = [];
+  for (let i = 0; i < basket.length; i++) {
+    let existingItemIndex = uniqueItems.findIndex(item => item.name === basket[i].name);
+    if (existingItemIndex !== -1) {
+      uniqueItems[existingItemIndex].quantity += basket[i].quantity;
     } else {
-      uniqueItems.push({...basket[i]}); // Basekt wird in UniqueItems gepusht
+      uniqueItems.push({...basket[i]});
     }
   }
-  return uniqueItems; // Wird zurück gegeben
+  return uniqueItems;
 }
 
-// LOCAL STORAGE //
-
+/**
+ * Speichert die aktuellen food- und basket-Daten im Local Storage.
+ */
 function save() {
   localStorage.setItem("food", JSON.stringify(food));
   localStorage.setItem("basket", JSON.stringify(basket));
 }
 
+/**
+ * Lädt die food- und basket-Daten aus dem Local Storage.
+ */
 function load() {
-  
   let foodAsText = localStorage.getItem("food");
   let basketAsText = localStorage.getItem("basket");
 
@@ -205,13 +225,18 @@ function load() {
     food = JSON.parse(foodAsText);
     basket = JSON.parse(basketAsText);
   }
-
 }
 
+/**
+ * Öffnet die Warenkorb-Ansicht (z.B. für mobile Ansicht).
+ */
 function openBasket() {
   document.getElementById('closeBasket').classList.add('bottom-row-basket');
 }
 
+/**
+ * Schließt die Warenkorb-Ansicht.
+ */
 function closeBasket() {
   document.getElementById('closeBasket').classList.remove('bottom-row-basket');
 }
